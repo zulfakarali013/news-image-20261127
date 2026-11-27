@@ -1,0 +1,9 @@
+{
+  "name": "news-image-20261127",
+  "private": true,
+  "type": "module",
+  "description": "Renders entry.png for the make.fun bounty news-image-20261127; main.ts needs no dependencies.",
+  "scripts": { "render": "node render/build.mjs && base64 -w 0 entry.png > entry.png.b64" },
+  "devDependencies": { "playwright": "*" },
+  "license": "MIT"
+}
