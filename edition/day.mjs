@@ -88,7 +88,9 @@ export const roundup = [
   ['Africa', 'Harare', '2027 budget lifts tax-free pay to $150'],
   ['North America', 'Ottawa', 'Top court rules on Bill 21 today'],
   ['Latin America', 'Brasília', 'Trabuco set as finance minister'],
-  ['Latin America', 'Buenos Aires', 'Deputies bar central bank funding state'],
+  ['Latin America', 'Buenos Aires', 'Milei 2027 budget clears Deputies at dawn'],
+  ['Latin America', 'Lima', 'Peru-Bolivia cabinet meets, first since 2021'],
+  ['Latin America', 'Mexico City', 'Sheinbaum admits weak growth, cites US'],
 ];
 
 export const figures = [
@@ -117,5 +119,7 @@ export const olderNews = [
   'Bank of England AI-debt warning — 26 Nov',
   'Rwanda rate rise to 9.5% — 26 Nov',
   'Liga MX and Asia Cup results — 26 Nov',
+  'Venezuela ban-law repeal plan — 26 Nov',
+  'Argentina central-bank law vote — 26 Nov',
   'Samra demolitions — 22 Nov',
 ];
