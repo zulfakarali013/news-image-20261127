@@ -2,8 +2,8 @@
   "name": "news-image-20261127",
   "private": true,
   "type": "module",
-  "description": "Renders entry.png for the make.fun bounty news-image-20261127; main.ts needs no dependencies.",
-  "scripts": { "render": "node render/build.mjs && base64 -w 0 entry.png > entry.png.b64" },
+  "description": "One-image front page of Friday 27 November 2026 for make.fun; main.ts uses only Node built-ins.",
+  "scripts": { "draw": "node edition/compose.mjs", "start": "node main.ts" },
   "devDependencies": { "playwright": "*" },
   "license": "MIT"
 }

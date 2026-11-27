@@ -1,47 +1,48 @@
-// Entry for make.fun news-image-20261127: "Sum up 27 November's world news in one image".
+// make.fun entry for news-image-20261127, "Sum up 27 November's world news in one image".
 //
-// The picture itself is drawn ahead of time by render/build.mjs from the stories in
-// render/stories.json (every headline, label, drawing and map pin is generated there),
-// and committed as entry.png.b64 beside this file (one line of base64, because the upload
-// route only carries text files). At grading time there is no network and
-// only the Node standard library, so this program only decodes it, verifies it and copies it
-// to /output/entry.png. Both runs therefore write the same bytes.
+// How it fits together: edition/compose.mjs draws the front page from edition/day.mjs and
+// saves it as entry.png.b64 (base64 on a single line; the upload path takes text only).
+// The grader runs this file offline with plain Node, so all it does is turn that text back
+// into image bytes, make sure they are a real PNG or JPEG inside the judge's limits, and
+// write them to the output folder. Same input, same bytes, every run.
 //
-// Local run:  mkdir -p out && MAKEFUN_OUTPUT_DIR=out node main.ts
+// Try it locally:  mkdir -p out && MAKEFUN_OUTPUT_DIR=out node main.ts
 
 import { readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 
-const MAX_BYTES = 1_048_576;
-const MAX_SIDE = 1024;
+const LIMIT_BYTES = 1024 * 1024; // the judge reads at most 1 MiB
+const LIMIT_PX = 1024; // and at most 1024 px on either side
 
-const bytes = Buffer.from(readFileSync(new URL('./entry.png.b64', import.meta.url), 'utf8').trim(), 'base64');
+type Picture = { format: 'png' | 'jpeg'; width: number; height: number };
 
-function sizeOf(buf: Buffer): { kind: string; w: number; h: number } {
-  // PNG: 8-byte signature, then the IHDR chunk holds width and height.
-  if (buf.subarray(0, 8).equals(Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]))) {
-    return { kind: 'png', w: buf.readUInt32BE(16), h: buf.readUInt32BE(20) };
+const encoded = readFileSync(new URL('./entry.png.b64', import.meta.url), 'utf8');
+const picture = Buffer.from(encoded.trim(), 'base64');
+
+function measure(data: Buffer): Picture {
+  const pngMagic = [0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a];
+  if (pngMagic.every((byte, i) => data[i] === byte)) {
+    // The first chunk after the magic is IHDR: width at offset 16, height at 20.
+    return { format: 'png', width: data.readUInt32BE(16), height: data.readUInt32BE(20) };
   }
-  // JPEG: walk the segments to the first start-of-frame marker.
-  if (buf[0] === 0xff && buf[1] === 0xd8) {
-    let i = 2;
-    while (i + 9 < buf.length) {
-      if (buf[i] !== 0xff) { i++; continue; }
-      const marker = buf[i + 1];
-      const len = buf.readUInt16BE(i + 2);
-      if (marker >= 0xc0 && marker <= 0xcf && marker !== 0xc4 && marker !== 0xc8 && marker !== 0xcc) {
-        return { kind: 'jpeg', w: buf.readUInt16BE(i + 7), h: buf.readUInt16BE(i + 5) };
-      }
-      i += 2 + len;
+  if (data[0] === 0xff && data[1] === 0xd8) {
+    // Step through JPEG segments until a start-of-frame header gives the size.
+    let at = 2;
+    while (at + 9 < data.length) {
+      if (data[at] !== 0xff) { at += 1; continue; }
+      const kind = data[at + 1];
+      const isFrame = kind >= 0xc0 && kind <= 0xcf && ![0xc4, 0xc8, 0xcc].includes(kind);
+      if (isFrame) return { format: 'jpeg', width: data.readUInt16BE(at + 7), height: data.readUInt16BE(at + 5) };
+      at += 2 + data.readUInt16BE(at + 2);
     }
   }
-  throw new Error('entry.png is neither a PNG nor a JPEG');
+  throw new Error('entry.png.b64 does not decode to a PNG or JPEG image');
 }
 
-const { kind, w, h } = sizeOf(bytes);
-if (bytes.length > MAX_BYTES) throw new Error(`entry.png is ${bytes.length} bytes, over ${MAX_BYTES}`);
-if (w > MAX_SIDE || h > MAX_SIDE) throw new Error(`entry.png is ${w}x${h}, over ${MAX_SIDE}px`);
+const { format, width, height } = measure(picture);
+if (picture.length > LIMIT_BYTES) throw new Error(`image is ${picture.length} bytes; the limit is ${LIMIT_BYTES}`);
+if (width > LIMIT_PX || height > LIMIT_PX) throw new Error(`image is ${width}x${height}; the limit is ${LIMIT_PX} px a side`);
 
-const outDir = process.env.MAKEFUN_OUTPUT_DIR ?? '/output';
-writeFileSync(join(outDir, 'entry.png'), bytes);
-console.log(`wrote ${join(outDir, 'entry.png')}: ${kind} ${w}x${h}, ${bytes.length} bytes`);
+const target = join(process.env.MAKEFUN_OUTPUT_DIR ?? '/output', 'entry.png');
+writeFileSync(target, picture);
+console.log(`saved ${target} (${format}, ${width}x${height}, ${picture.length} bytes)`);
