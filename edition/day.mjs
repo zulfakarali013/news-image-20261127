@@ -7,6 +7,7 @@ export const edition = {
   isoDate: '2026-11-27',
   dayName: 'Friday',
   pledge: 'Everything here took place, or first broke, on Friday 27 November 2026. Each item carries a sureness label; earlier news is listed in the date check.',
+  topLine: 'EU summit ends with no budget and no €45bn for Ukraine · Gulf attacks keep Brent near $96 · NZ coalition one seat short',
   outlets: 'Reuters · AP · AFP · Politico · Kyodo · Yonhap · SCMP · Globe and Mail · Vanguard',
 };
 
@@ -16,7 +17,7 @@ export const headliners = [
     where: 'Brussels', zone: 'Europe', lat: 50.85, lon: 4.35, sketch: 'council', sure: 'CONFIRMED',
     tag: 'EU · BUDGET SUMMIT',
     title: 'EU leaders walk out without a budget',
-    line: 'Summit ends early with no deal on the 2028–34 budget or the €45bn loan for Ukraine. They meet again 17–18 Dec.',
+    line: 'Summit ends early with no deal on the 2028–34 budget or the €45bn loan for Ukraine.',
     credit: 'Reuters · Politico',
   },
   {
@@ -57,26 +58,25 @@ export const roundup = [
   ['East Asia', 'Seoul', 'Justice ministry raided over leak'],
   ['East Asia', 'Tokyo', 'Minister Seki beats censure, 124–120'],
   ['East Asia', 'Seoul', '6 drifted N. Koreans repatriated'],
-  ['East Asia', 'Pyongyang', 'Kim watches visiting Russian troupe'],
+  ['East Asia', 'Pyongyang', 'Kim sees visiting Russian troupe'],
   ['Southeast Asia', 'Jakarta', 'Mulls first fuel hike in 5 years'],
   ['Southeast Asia', 'Jakarta', 'Daycare owner gets 9-year term'],
-  ['Southeast Asia', 'Kuala Lumpur', 'AirAsia postpones staff salaries'],
-  ['Southeast Asia', 'Bangkok', 'Bangchak refinery blaze controlled'],
+  ['Southeast Asia', 'Kuala Lumpur', 'AirAsia delays staff salaries'],
+  ['Southeast Asia', 'Bangkok', 'Bangchak refinery fire controlled'],
   ['Southeast Asia', 'Hat Yai', 'Heavy-rain alert through 30 Nov'],
   ['South Asia', 'Mumbai', 'Rupee weakens to 92.62 on oil'],
   ['Middle East', 'Tehran', 'Warns South Korea off Gulf naval role'],
   ['Oceania', 'Melbourne', 'Coalition leads in Newspoll'],
   ['Oceania', 'Canberra', 'IMF warns on A$3.1tn pension pool'],
-  ['Europe', 'Madrid', 'Campaigning ends before Sunday vote'],
   ['Africa', 'Niamey', '13 troops killed near Mali border'],
   ['Africa', 'Lagos', 'Crash fire kills six on highway'],
   ['Africa', 'Abuja', 'Pension arrears from 2013 settled'],
   ['Africa', 'Nairobi', 'Sh30bn road-safety plan unveiled'],
   ['Africa', 'Twifo Praso, Ghana', 'Drug-raid clash: 1 dead'],
-  ['Africa', 'Addis Ababa', '$1bn bond exchange offer launched'],
+  ['Africa', 'Addis Ababa', '$1bn bond swap offer'],
   ['North America', 'Ottawa', 'Top court rules on Bill 21 today'],
   ['Latin America', 'Brasília', 'Trabuco set as finance minister'],
-  ['Latin America', 'Buenos Aires', 'Deputies bar central bank funding state'],
+  ['Latin America', 'Buenos Aires', 'Deputies pass 2027 budget'],
 ];
 
 export const figures = [
@@ -101,5 +101,6 @@ export const olderNews = [
   'Kyiv strike and Zelensky warning — 26 Nov',
   'Odesa grain ships struck — 26 Nov',
   'ECB president pick — 26 Nov',
+  'Argentina central-bank law vote — 26 Nov',
   'Samra demolitions — 22 Nov',
 ];
