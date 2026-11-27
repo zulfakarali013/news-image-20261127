@@ -1,7 +1,6 @@
 // Turns edition/day.mjs into the 1024 x 1024 front page and screenshots it to entry.png.
-// Layout, top to bottom: region tally, date masthead, figures strip, 3 headliners,
-// 6 panels in two rows of three, then the locator map + UTC clock + date check beside
-// a two-column roundup, then credits.
+// Layout, top to bottom: region tally, date masthead, 3 headliners, 10 panels, figures strip,
+// then the locator map + UTC clock + date check beside a two-column roundup, then credits.
 // Run: node edition/compose.mjs   (Playwright is a dev-only dependency; main.ts never needs it)
 
 import { writeFileSync, mkdirSync } from 'node:fs';
@@ -38,7 +37,7 @@ const card = (s, n, big) => `
   </div>`;
 
 const firstBrief = pinned.length + 1;
-const half = Math.ceil(roundup.length / 2);
+const splitAt = Math.ceil(roundup.length / 2);
 const briefList = (rows, start) => rows.map(([, place, text], i) => `<li class="fit"><em>${start + i}</em><b>${safe(place)}</b> ${safe(text)}</li>`).join('');
 
 const page = `<!doctype html><html><head><meta charset="utf-8"><style>
@@ -49,53 +48,51 @@ body{width:1024px;height:1024px;overflow:hidden;background:#f5efe3;color:#1c1a18
 .zones{display:flex;gap:4px}.zones span{background:#1e3b60;color:#fff;border-radius:3px;padding:1px 4px;font-size:9.5px;letter-spacing:0;white-space:nowrap}
 .total{color:#b1271f}
 header{text-align:center;border-bottom:3px double #1c1a18;padding:2px 0 4px}
-header h1{font:900 54px/1.02 'Noto Serif',serif;letter-spacing:-.01em}
+header h1{font:900 58px/1.02 'Noto Serif',serif;letter-spacing:-.01em}
 header h1 span{color:#b1271f}
-header p{font:italic 700 12.4px/1.25 'Noto Serif',serif;color:#8d2019;margin-top:2px;white-space:nowrap}
+header p{font-size:11.5px;color:#3c3732;margin-top:1px}
 .row3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;padding:8px 0}
-.row3:last-of-type{padding-bottom:0}
-.row3b{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;padding-bottom:8px}
+.row5{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;padding-bottom:8px}
 .card{background:#fffcf6;border:1px solid #c9bda6;border-radius:5px;overflow:hidden}
 .art{position:relative;line-height:0;border-bottom:1px solid #c9bda6}.art svg{display:block;width:100%}
-.big .art svg{height:76px}.mini .art svg{height:48px}
+.big .art svg{height:88px}.mini .art svg{height:42px}
 .pin{position:absolute;left:6px;bottom:0;transform:translateY(50%);width:20px;height:20px;border-radius:50%;background:#b1271f;border:1.5px solid #fff;color:#fff;font:800 11px/17px 'Noto Sans';text-align:center}
 .txt{padding:9px 8px 6px}.mini .txt{padding-top:8px}
 .tag{padding-left:20px;font-size:10px;font-weight:800;letter-spacing:.07em;color:#1e3b60}.mini .tag{font-size:9.5px}
 .hed{font-family:'Noto Serif',serif;font-weight:800;white-space:nowrap;overflow:hidden}
 .big .hed{font-size:19.5px;line-height:1.15;margin-top:3px;white-space:normal}
-.mini .hed{font-size:15.5px;line-height:1.15;margin-top:3px;white-space:normal}
-.dek{color:#3c3732;margin-top:3px}.big .dek{font-size:12px;line-height:1.28}.mini .dek{font-size:11.5px;line-height:1.22;margin-top:2px}
+.mini .hed{font-size:14px;line-height:1.15;margin-top:2px;white-space:normal}
+.dek{color:#3c3732;margin-top:3px}.big .dek{font-size:11.5px;line-height:1.28}.mini .dek{font-size:10.5px;line-height:1.22;margin-top:2px}
 .foot{display:flex;gap:6px;align-items:center;margin-top:4px}
 .sure{font-style:normal;color:#fff;font-size:8.8px;font-weight:800;letter-spacing:.05em;padding:2px 5px;border-radius:2px}
 .cred{font-size:9.5px;font-weight:700;color:#5b544b}
-.figs{margin-top:8px;display:grid;grid-template-columns:110px repeat(4,1fr);gap:10px;align-items:center;background:#1e3b60;color:#fff;border-radius:4px;padding:6px 12px}
+.figs{display:grid;grid-template-columns:110px repeat(4,1fr);gap:10px;align-items:center;background:#1e3b60;color:#fff;border-radius:4px;padding:6px 12px}
 .figs h4{font-size:10.5px;letter-spacing:.08em;color:#f1c04d}
 .figs strong{display:block;font:700 24px/1 'Noto Serif',serif}.figs small{display:block;font-size:10px;line-height:1.2;color:#d5dfeb}
-.lower{flex:1;min-height:0;display:grid;grid-template-columns:372px 1fr;gap:12px;padding-top:8px}
+.lower{flex:1;min-height:0;display:grid;grid-template-columns:400px 1fr;gap:14px;padding-top:8px}
 h5{font-size:11px;font-weight:800;letter-spacing:.08em;color:#1e3b60;margin-bottom:4px}
-.map svg{display:block;width:100%;border:1px solid #c9bda6;border-radius:4px;max-height:120px}
-.clock{display:grid;grid-template-columns:repeat(2,1fr);gap:1px 6px;margin-top:4px;font-size:9.6px;line-height:1.35;white-space:nowrap}
+.map svg{display:block;width:100%;border:1px solid #c9bda6;border-radius:4px}
+.clock{display:grid;grid-template-columns:repeat(3,1fr);gap:1px 6px;margin-top:4px;font-size:9.6px;line-height:1.35;white-space:nowrap}
 .clock b{color:#b1271f;margin-right:3px}
-.check{margin-top:5px;border:1.5px solid #b1271f;border-radius:4px;background:#fbf2e8;padding:4px 8px;font-size:9.2px;line-height:1.3;color:#3c3732}
+.check{margin-top:5px;border:1.5px solid #b1271f;border-radius:4px;background:#fbf2e8;padding:4px 8px;font-size:9.6px;line-height:1.35;color:#3c3732}
 .check b{color:#b1271f;letter-spacing:.05em;margin-right:4px}
-.two{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 10px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:0 12px}
 .two ol{list-style:none}
-.two li{position:relative;padding:2px 0 2px 24px;font-size:11px;line-height:1.3;white-space:nowrap;overflow:hidden}
-.two li em{position:absolute;left:0;top:2px;width:19px;height:14px;border-radius:7px;background:#1e3b60;color:#fff;font:normal 800 9px/14px 'Noto Sans';text-align:center}
+.two li{position:relative;padding:2px 0 2px 23px;font-size:10.6px;line-height:1.2;white-space:nowrap;overflow:hidden}
+.two li em{position:absolute;left:0;top:2px;width:18px;height:15px;border-radius:8px;background:#1e3b60;color:#fff;font:normal 800 9px/15px 'Noto Sans';text-align:center}
 .credits{margin-top:6px;border-top:1px solid #1c1a18;padding:4px 0 7px;text-align:center;font-size:9.3px;color:#5b544b;white-space:nowrap}
 </style></head><body><div id="sheet">
   <div class="band"><div class="zones">${tally.map(([z, n]) => `<span>${safe(z.toUpperCase())} ${n}</span>`).join('')}</div><div class="total">${storyCount} STORIES · ${tally.length} REGIONS</div></div>
-  <header><h1>${safe(edition.dayName)} <span>${dayNo} ${monthName} ${year}</span></h1><p>${safe(edition.topLine)}</p></header>
-  <section class="figs"><h4>BY THE<br>NUMBERS</h4>${figures.map(([big, small]) => `<div><strong>${safe(big)}</strong><small>${safe(small)}</small></div>`).join('')}</section>
+  <header><h1>${safe(edition.dayName)} <span>${dayNo} ${monthName} ${year}</span></h1><p>${safe(edition.pledge)}</p></header>
   <section class="row3">${headliners.map((s, i) => card(s, i + 1, true)).join('')}</section>
-  <section class="row3b">${panels.slice(0, 3).map((s, i) => card(s, headliners.length + i + 1, false)).join('')}</section>
-  <section class="row3b">${panels.slice(3, 6).map((s, i) => card(s, headliners.length + i + 4, false)).join('')}</section>
+  <section class="row5">${panels.map((s, i) => card(s, headliners.length + i + 1, false)).join('')}</section>
+  <section class="figs"><h4>BY THE<br>NUMBERS</h4>${figures.map(([big, small]) => `<div><strong>${safe(big)}</strong><small>${safe(small)}</small></div>`).join('')}</section>
   <section class="lower">
     <div class="map"><h5>WHERE IT HAPPENED · PINS 1–${pinned.length} · TIMES UTC</h5>${locatorMap(pinned)}
       <div class="clock">${clock.map(([t, what]) => `<div><b>${t}</b>${safe(what)}</div>`).join('')}</div>
-      <div class="check"><b>DATE CHECK</b>All items broke on ${dayNo} Nov. Left out, from other days: ${olderNews.map(safe).join(' · ')}</div></div>
+      <div class="check"><b>DATE CHECK — LEFT OUT, NOT ${dayNo} NOV:</b>${olderNews.map(safe).join(' · ')}</div></div>
     <div><h5>ALSO ON ${safe(edition.dayName.toUpperCase())} ${dayNo} ${monthName.toUpperCase()} ${year} · STORIES ${firstBrief}–${storyCount}</h5>
-      <div class="two">${[0, 1].map((k) => `<ol>${briefList(roundup.slice(k * half, (k + 1) * half), firstBrief + k * half)}</ol>`).join('')}</div></div>
+      <div class="two"><ol>${briefList(roundup.slice(0, splitAt), firstBrief)}</ol><ol>${briefList(roundup.slice(splitAt), firstBrief + splitAt)}</ol></div></div>
   </section>
   <div class="credits">Sources: ${safe(edition.outlets)} · Pictures are original drawings, not photos · CONFIRMED = 2+ outlets · OFFICIAL = government or organiser · REPORTED = one outlet</div>
 </div></body></html>`;
@@ -117,7 +114,7 @@ const report = await tab.evaluate(() => {
   for (const el of document.querySelectorAll('li.fit')) {
     let size = parseFloat(getComputedStyle(el).fontSize);
     while (el.scrollWidth > el.clientWidth && size > 9) { size -= 0.2; el.style.fontSize = size + 'px'; }
-    if (size < 10) shrunk.push(size.toFixed(1));
+    if (size < 10.6) shrunk.push(size.toFixed(1));
   }
   const tooTall = [...document.querySelectorAll('.card')].filter((c) => c.scrollHeight > c.clientHeight + 1).length;
   return { shrunk, tooTall, creditsEnd: document.querySelector('.credits').getBoundingClientRect().bottom };

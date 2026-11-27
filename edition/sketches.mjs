@@ -45,7 +45,7 @@ const sketches = {
     `<rect x="74" y="16" width="28" height="40" fill="#fff" stroke="${C.ink}" stroke-width="2"/>` +
     `<path d="M81 36 l6 7 l10 -13" stroke="${C.green}" stroke-width="4" fill="none"/>` +
     Array.from({ length: 13 }, (_, i) => `<rect x="${158 + i * 10}" y="58" width="8" height="26" fill="${i < 6 ? C.navy : i === 6 ? C.gold : '#b9c3cf'}"/>`).join('') +
-    label(222, 50, 14, C.ink, '65 / 130')),
+    label(222, 106, 14, C.ink, '65 / 130')),
 
   // Military drill: coastline, a chain of small boats making a bridge, two grey ships.
   bridge: () => board('#c3d7e6',
