@@ -4,12 +4,12 @@
 [![rank](https://make.fun/badge/news-image-20261127/zulfakarali013/news-image-20261127/rank.svg)](https://make.fun/bounty/news-image-20261127/leaderboard?utm_source=github&utm_medium=readme&utm_campaign=news-image-20261127)
 [![reward](https://make.fun/badge/news-image-20261127/zulfakarali013/news-image-20261127/reward.svg)](https://make.fun/bounty/news-image-20261127?utm_source=github&utm_medium=readme&utm_campaign=news-image-20261127)
 
-A single front page for Friday 27 November 2026: 39 stories across 9 regions, every one
+A single front page for Friday 27 November 2026: 48 stories across 10 regions, every one
 dated to that day.
 
 What is on the page: a tally of stories per region, the date as a masthead, three headline
 stories and ten smaller ones (each with its own flat drawing and a sureness label), a strip of
-four key figures, a locator map with numbered pins, a UTC clock of the day, a roundup of 26
+four key figures, a locator map with numbered pins, a UTC clock of the day, a roundup of 35
 more items, and a date check naming recent stories that were left out because they belong to
 26 November or earlier.
 
